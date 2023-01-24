@@ -10,22 +10,19 @@ public class Game {
     private LottoController lottoController;
 
     public Game() {
-        try {
-            this.lottoController = new LottoController();
-            play();
-        } catch (IllegalArgumentException e) {
-            System.out.println(e.getMessage());
-        }
+        this.lottoController = new LottoController();
+        play();
     }
 
     void play() {
         try {
             lottoController.initPlayerPrice();
+            lottoController.initMatchCount();
             GeneralOutputView.printLottos(lottoController.getLottoService());
             lottoController.initPlayerNumbers();
             lottoController.initPlayerBonusNumbers();
             lottoController.calculateWinningStatistics();
-            GeneralOutputView.printResult(lottoController.getLottoService());
+            GeneralOutputView.printResult(lottoController.getPrizeService());
         } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
         }

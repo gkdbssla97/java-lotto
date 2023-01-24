@@ -1,9 +1,6 @@
 package lotto.model.domain;
 
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.IntStream;
 
 public class Rank {
 
@@ -40,12 +37,17 @@ public class Rank {
 
     public double setYield(Integer playerPrice) {
         int sum = 0;
-        sum += Message.MATCHING_THREE.getReward() * rankChart.get("3");
-        sum += Message.MATCHING_FOUR.getReward() * rankChart.get("4");
-        sum += Message.MATCHING_FIVE.getReward() * rankChart.get("5");
-        sum += Message.MATCHING_FIVE_WITH_BONUS.getReward() * rankChart.get("5 + 보너스");
-        sum += Message.MATCHING_SIX.getReward() * rankChart.get("6");
+        sum = getSum(sum);
         return (double) (sum * 100) / playerPrice;
+    }
+
+    private int getSum(int sum) {
+        sum += Prize.MATCHING_THREE.getReward() * rankChart.get("3");
+        sum += Prize.MATCHING_FOUR.getReward() * rankChart.get("4");
+        sum += Prize.MATCHING_FIVE.getReward() * rankChart.get("5");
+        sum += Prize.MATCHING_FIVE_WITH_BONUS.getReward() * rankChart.get("5 + 보너스");
+        sum += Prize.MATCHING_SIX.getReward() * rankChart.get("6");
+        return sum;
     }
 
     public HashMap<String, Integer> getRankChart() {

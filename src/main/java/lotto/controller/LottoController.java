@@ -2,6 +2,7 @@ package lotto.controller;
 
 import lotto.model.service.LottoService;
 import lotto.model.service.PlayerService;
+import lotto.model.service.PrizeService;
 import lotto.validator.PlayerValidator;
 import lotto.view.PlayerInputView;
 
@@ -11,10 +12,12 @@ public class LottoController {
 
     private PlayerService playerService;
     private LottoService lottoService;
+    private PrizeService prizeService;
 
     public LottoController() {
         this.playerService = new PlayerService();
         this.lottoService = new LottoService(playerService.getPlayer());
+        this.prizeService = new PrizeService(playerService.getPlayer());
     }
 
     public void initPlayerPrice() {
@@ -42,10 +45,18 @@ public class LottoController {
     }
 
     public void calculateWinningStatistics() {
-        lottoService.calculateWinningStatistics();
+        lottoService.calculateWinningStatistics(prizeService);
     }
 
     public LottoService getLottoService() {
         return lottoService;
+    }
+
+    public PrizeService getPrizeService() {
+        return prizeService;
+    }
+
+    public void initMatchCount() {
+        prizeService.initPrize();
     }
 }

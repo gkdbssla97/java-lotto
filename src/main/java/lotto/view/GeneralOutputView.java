@@ -1,10 +1,8 @@
 package lotto.view;
 
-import lotto.model.domain.Lotto;
-import lotto.model.domain.Lottos;
-import lotto.model.domain.Message;
-import lotto.model.domain.Rank;
+import lotto.model.domain.*;
 import lotto.model.service.LottoService;
+import lotto.model.service.PrizeService;
 
 import java.util.Arrays;
 import java.util.List;
@@ -20,15 +18,13 @@ public class GeneralOutputView {
         }
     }
 
-    public static void printResult(LottoService lottoService) {
-        Rank rank = lottoService.getRank();
+    public static void printResult(PrizeService prizeService) {
         System.out.println("\n" + Message.WINNER_STATISTICS.getMessage());
-        System.out.println(Message.MATCHING_THREE.getMessage() + rank.toString(rank.getRankChart().get("3")));
-        System.out.println(Message.MATCHING_FOUR.getMessage() + rank.toString(rank.getRankChart().get("4")));
-        System.out.println(Message.MATCHING_FIVE.getMessage() + rank.toString(rank.getRankChart().get("5")));
-        System.out.println(Message.MATCHING_FIVE_WITH_BONUS.getMessage() + rank.toString(rank.getRankChart().get("5 + 보너스")));
-        System.out.println(Message.MATCHING_SIX.getMessage() + rank.toString(rank.getRankChart().get("6")));
-        System.out.println(Message.TOTAL_YIELD.getMessage() + rank.toString(String.format("%.1f", rank.setYield(lottoService.getPlayerPrice()))));
+        for (Prize prize : Prize.values()) {
+            System.out.println(prize.getWinningMessage() + prize.getMatchingCount() + "개");
+        }
+        System.out.println(Message.TOTAL_YIELD.getMessage()
+                + prizeService.calculateTotalPrize() + Message.TOTAL_YIELD_MESSAGE_END.getMessage() );
     }
 
 }

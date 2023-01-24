@@ -1,9 +1,6 @@
 package lotto.model.service;
 
-import lotto.model.domain.Lotto;
-import lotto.model.domain.Lottos;
-import lotto.model.domain.Player;
-import lotto.model.domain.Rank;
+import lotto.model.domain.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -38,29 +35,28 @@ public class LottoService {
         return lottos;
     }
 
-    public void calculateWinningStatistics() {
-        List<Lotto> lottoList = lottos.getLottos();
-        List<Integer> playerNumbers = player.getPlayerNumbers();
-        List<Integer> rankCount = Arrays.asList(0, 0, 0, 0, 0);
-        for (int i = 0; i < lottoList.size(); i++) {
+    public void calculateWinningStatistics(PrizeService prizeService) {
+        for (Lotto lotto : lottos.getLottos()) {
             int count = 0;
             boolean isBonusNumberContain = false;
-            Lotto lotto = lottoList.get(i);
             List<Integer> numbers = lotto.getNumbers();
-            for (int j = 0; j < playerNumbers.size(); j++) {
-//                System.out.println(numbers.contains(playerNumbers.get(j)));
-                if (numbers.contains(playerNumbers.get(j))) {
+            for (Integer playerNumber : player.getPlayerNumbers()) {
+                if (numbers.contains(playerNumber)) {
                     count += 1;
                 }
                 if (numbers.contains(player.getPlayerBonusNumber())) {
                     isBonusNumberContain = true;
                 }
             }
-            if (count == 5 && isBonusNumberContain) {
-                rank.setRankChart(0);
-            } else if (count >= 3) {
-                rank.setRankChart(count);
-            }
+            setWinningStatistics(count, isBonusNumberContain, prizeService);
+        }
+    }
+
+    private void setWinningStatistics(int ranking, boolean isBonusNumberContain, PrizeService prizeService) {
+        if (ranking == 5 && isBonusNumberContain) {
+            Prize.MATCHING_FIVE_WITH_BONUS.increaseMatchingPoint();
+        } else if (ranking >= 3) {
+            prizeService.findByRanking(ranking);
         }
     }
 
